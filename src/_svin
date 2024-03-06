@@ -1,0 +1,7 @@
+#compdef svin
+
+_svin_completion() {
+  eval $(env _TYPER_COMPLETE_ARGS="${words[1,$CURRENT]}" _SVIN_COMPLETE=complete_zsh svin)
+}
+
+compdef _svin_completion svin
