@@ -1,6 +1,6 @@
-#compdef trash-restore
+#compdef shallow-backup
 # ------------------------------------------------------------------------------
-# Copyright (c) 2016 Github zsh-users - http://github.com/zsh-users
+# Copyright (c) 2023 Aaron Lichtman -- https://github.com/alichtman
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
 #       names of its contributors may be used to endorse or promote products
 #       derived from this software without specific prior written permission.
 #
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 # DISCLAIMED. IN NO EVENT SHALL ZSH-USERS BE LIABLE FOR ANY
@@ -28,26 +28,43 @@
 # Description
 # -----------
 #
-#  Completion script for trash-restore a tool from trash management package trash-cli (http://code.google.com/p/trash-cli).
+#  Completion script for shallow-backup: https://github.com/alichtman/shallow-backup
 #
 # ------------------------------------------------------------------------------
 # Authors
 # -------
 #
-#  * Jindřich Pilař (https://github.com/JindrichPilar)
+#  * Aaron Lichtman (https://github.com/alichtman)
 #
 # ------------------------------------------------------------------------------
 
 
-_trash-restore() {
-
-  _arguments -C \
-    '--version[Show programs version number and exit]' \
-    '*: :' \
-
+_shallow-backup() {
+    _arguments \
+      '(- 1 *)'{-h,--help}'[Show help and exit]' \
+      '(- 1 *)'{-v,--version}'[Print version]' \
+      '--add-dot[Add a dotfile or dotfolder to config by path]:PATH:_files' \
+      '--backup-all[Full back up]' \
+      '--backup-configs[Back up app config files]' \
+      '--backup-dots[Back up dotfiles]' \
+      '--backup-fonts[Back up installed fonts]' \
+      '--backup-packages[Back up package libraries]' \
+      '--delete-config[Delete config file]' \
+      '--destroy-backup[Delete backup directory]' \
+      '--dry-run[Do not backup or reinstall any files, just give verbose output]' \
+      '--new-path[Input a new back up directory path]:PATH:_files -/' \
+      '--no-new-backup-path-prompt[Skip setting new back up directory path prompt]' \
+      '--no-splash[Do not display splash screen]' \
+      '--reinstall-all[Full reinstallation]' \
+      '--reinstall-configs[Reinstall configs]' \
+      '--reinstall-dots[Reinstall dotfiles and dotfolders]' \
+      '--reinstall-fonts[Reinstall fonts]' \
+      '--reinstall-packages[Reinstall packages]' \
+      '--remote[Set remote URL for the git repo]':url \
+      '--show[Display config file]'
 }
 
-_trash-restore
+_shallow-backup
 
 # Local Variables:
 # mode: Shell-Script
