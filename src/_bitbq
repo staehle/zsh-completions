@@ -1,0 +1,3028 @@
+#compdef bitbq
+
+autoload -U is-at-least
+
+_bitbq() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" : \
+'-p+[Platform to select. Appends can be specified with a "\:" separator. (Defaults to last used, if any.)]:PLATFORM:($(__bitbq_platform_selector))' \
+'--platform=[Platform to select. Appends can be specified with a "\:" separator. (Defaults to last used, if any.)]:PLATFORM:($(__bitbq_platform_selector))' \
+'*-a+[Append platforms to use (old style syntax, still supported)]:APPEND_PLATFORM:($(__bitbq_append_selector))' \
+'*--append-platform=[Append platforms to use (old style syntax, still supported)]:APPEND_PLATFORM:($(__bitbq_append_selector))' \
+'-b+[Build directory to use, if needed. Defaults to "build"]:BUILD_DIR:_files -/' \
+'--build-dir=[Build directory to use, if needed. Defaults to "build"]:BUILD_DIR:_files -/' \
+'-u+[UI console output options]:UI:((color\:"Colorize"
+no-color\:"No colorization \[alias\: nc\]"
+non-tty\:"NonTTY \[alias\: nt\]"
+teamcity\:"TeamCity formatted output (assumes NonTTY)"
+logfile\:"Logfile Style (assumes NonTTY)"))' \
+'--ui=[UI console output options]:UI:((color\:"Colorize"
+no-color\:"No colorization \[alias\: nc\]"
+non-tty\:"NonTTY \[alias\: nt\]"
+teamcity\:"TeamCity formatted output (assumes NonTTY)"
+logfile\:"Logfile Style (assumes NonTTY)"))' \
+'--idle-timeout=[set the bitbqd/container idle timeout, in seconds]:IDLE_TIMEOUT:_default' \
+'--startup-timeout=[max seconds to wait for bitbqd to become ready when auto-starting, in seconds]:STARTUP_TIMEOUT:_default' \
+'-n[Specify this arg to not load the global user-default config at \$XDG_CONFIG_HOME/bitbq/config.yaml]' \
+'--no-config[Specify this arg to not load the global user-default config at \$XDG_CONFIG_HOME/bitbq/config.yaml]' \
+'--no-sync[Disable the forced sync at startup for build and exec commands]' \
+'-l[deprecated arg]' \
+'--logfile[deprecated arg]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+'-V[Print version]' \
+'--version[Print version]' \
+":: :_bitbq_commands" \
+"*::: :->bitbq-client" \
+&& ret=0
+    case $state in
+    (bitbq-client)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-command-$line[1]:"
+        case $line[1] in
+            (init)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(view)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_bitbq__view_commands" \
+"*::: :->view" \
+&& ret=0
+
+    case $state in
+    (view)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-view-command-$line[1]:"
+        case $line[1] in
+            (worktrees)
+_arguments "${_arguments_options[@]}" : \
+'-s[Simple status report\: No table, only prints unmanaged/dirty worktrees (Deprecated, now always on. Here for compatibility)]' \
+'--simple[Simple status report\: No table, only prints unmanaged/dirty worktrees (Deprecated, now always on. Here for compatibility)]' \
+'(-s --simple)-t[Fancy table view]' \
+'(-s --simple)--table[Fancy table view]' \
+'*-a[Show more worktrees\: use once (-a) to show all present worktrees with status, use twice (-aa) to also include snapshot entries not on disk]' \
+'*--all[Show more worktrees\: use once (-a) to show all present worktrees with status, use twice (-aa) to also include snapshot entries not on disk]' \
+'-i[Show worktrees that are not bitbq keys (normally ignored)]' \
+'--ignored[Show worktrees that are not bitbq keys (normally ignored)]' \
+'(-t --table)-c[Show commit differences between current status and snapshot revisions (non-table-view only)]' \
+'(-t --table)--show-commits[Show commit differences between current status and snapshot revisions (non-table-view only)]' \
+'--show-submodules[Show git submodules for each worktree]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(managed-ids)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(platform)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(platform-map)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(snapshot)
+_arguments "${_arguments_options[@]}" : \
+'-f[Filter by platform groups]' \
+'--filter[Filter by platform groups]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(last-ctx)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(config)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__view__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-view-help-command-$line[1]:"
+        case $line[1] in
+            (worktrees)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(managed-ids)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(platform)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(platform-map)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(snapshot)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(last-ctx)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(config)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(sync)
+_arguments "${_arguments_options[@]}" : \
+'*-l+[Limit sync to specified '\''categories'\'' (Multiple may be specified) Implies --create]:LIMIT:_default' \
+'*--limit=[Limit sync to specified '\''categories'\'' (Multiple may be specified) Implies --create]:LIMIT:_default' \
+'-m[Sync all root-level meta worktrees (meta layers, utilities) for the currently set platform. Implies --create]' \
+'--meta[Sync all root-level meta worktrees (meta layers, utilities) for the currently set platform. Implies --create]' \
+'-c[By default, only worktrees currently present in "sources" are synced, not creating new ones. --create will create any missing worktrees. NOTE\: "bitbq sync --create" with no other args will sync all component repos, ** even if they would be cached! **]' \
+'--create[By default, only worktrees currently present in "sources" are synced, not creating new ones. --create will create any missing worktrees. NOTE\: "bitbq sync --create" with no other args will sync all component repos, ** even if they would be cached! **]' \
+'(-m --meta)-w[By default, only items affiliated with the currently set platform are synced,     as determined by the groups your selected platform has root-level repos in (layers). --world will remove that restriction.]' \
+'(-m --meta)--world[By default, only items affiliated with the currently set platform are synced,     as determined by the groups your selected platform has root-level repos in (layers). --world will remove that restriction.]' \
+'(-f --force -c --create -r --reclaim)-R[--repair will find and fix any worktrees in a broken state]' \
+'(-f --force -c --create -r --reclaim)--repair[--repair will find and fix any worktrees in a broken state]' \
+'-f[By default, will return an error if the repo is dirty. --force will overwrite unstaged/uncommitted changes! --force will also let bitbq assume management of worktrees]' \
+'--force[By default, will return an error if the repo is dirty. --force will overwrite unstaged/uncommitted changes! --force will also let bitbq assume management of worktrees]' \
+'(-f --force -R --repair -p --prepopulate)-r[Re-manage worktrees that have become unmanaged, but only if their working directory is clean. Safer alternative to --force for reclaiming worktrees.]' \
+'(-f --force -R --repair -p --prepopulate)--reclaim[Re-manage worktrees that have become unmanaged, but only if their working directory is clean. Safer alternative to --force for reclaiming worktrees.]' \
+'(-f --force -r --reclaim)-p[Pre-populate git barestores, but do not create worktrees]' \
+'(-f --force -r --reclaim)--prepopulate[Pre-populate git barestores, but do not create worktrees]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+'*::WHAT -- Sync only specified worktree(s). Implies --create:__bitbq_all_keys_selector' \
+&& ret=0
+;;
+(build)
+_arguments "${_arguments_options[@]}" : \
+'*-c+[Run this bitbake task (Default\: "do_build") (Multiple may be specified)]:TASK:_default' \
+'*--task=[Run this bitbake task (Default\: "do_build") (Multiple may be specified)]:TASK:_default' \
+'--output=[Output format when using --detach]:OUTPUT:((text\:"Human-readable text (default)"
+json\:"JSON object with exec_id and watch_cmd fields"))' \
+'--detach[Sync repos synchronously, then register the bitbake exec with bitbqd and exit immediately. The build keeps running in the background under bitbqd'\''s supervision. Prints the exec_id to stdout and a watch hint to stderr. Exit code 0 means the exec was successfully registered]' \
+'--postbuild-only[Skip sync and skip the bitbake exec; run only the platform'\''s postbuild command(s). The platform must have a \`postbuild\` section configured or the command will exit with an error]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+'*::target -- Build this bitbake target rather than platform default (Multiple may be specified):_default' \
+&& ret=0
+;;
+(lock)
+_arguments "${_arguments_options[@]}" : \
+'-c+[Set this commitish for worktrees to this value instead of '\''HEAD'\'' (default)]:COMMITISH:_default' \
+'--commitish=[Set this commitish for worktrees to this value instead of '\''HEAD'\'' (default)]:COMMITISH:_default' \
+'-o+[Output to a specified file, or to stdout if \`-\` is specified]:OUTPUT:_files' \
+'--output=[Output to a specified file, or to stdout if \`-\` is specified]:OUTPUT:_files' \
+'-i[Ignore errors, output best effort]' \
+'--ignore-errors[Ignore errors, output best effort]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+'*::WHAT -- If not specified, will take the current state of all worktrees:__bitbq_present_keys_selector' \
+&& ret=0
+;;
+(for)
+_arguments "${_arguments_options[@]}" : \
+'-s[Run commands interactively in serial instead of parallel]' \
+'--serial[Run commands interactively in serial instead of parallel]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::worktrees -- List of worktrees'\'' (by bitbq key name) directories to run commands in:__bitbq_present_keys_selector' \
+':command -- Command to run in each worktree directory (likely needing quotes):_cmdstring' \
+&& ret=0
+;;
+(foreach)
+_arguments "${_arguments_options[@]}" : \
+'-d[Filter to worktrees that have modifications (dirty)]' \
+'--dirty[Filter to worktrees that have modifications (dirty)]' \
+'-n[Filter to worktrees that are not managed (can combine with -d)]' \
+'--not-managed[Filter to worktrees that are not managed (can combine with -d)]' \
+'-s[Run commands interactively in serial instead of parallel]' \
+'--serial[Run commands interactively in serial instead of parallel]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+':command -- Command to run in each current worktrees'\'' directories (likely needing quotes):_cmdstring' \
+&& ret=0
+;;
+(exec)
+_arguments "${_arguments_options[@]}" : \
+'--output=[Output format when using --detach]:OUTPUT:((text\:"Human-readable text (default)"
+json\:"JSON object with exec_id and watch_cmd fields"))' \
+'-p[Run postbuild commands after exec, if any]' \
+'--postbuild[Run postbuild commands after exec, if any]' \
+'--detach[Register the exec with bitbqd and exit immediately; the exec keeps running in the background under bitbqd'\''s supervision. Prints the exec_id to stdout (pipeable) and a watch hint to stderr. Exit code 0 means the exec was successfully registered, not that it completed]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+'*::command -- Command to run in-container:_cmdstring' \
+&& ret=0
+;;
+(cc)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_bitbq__cc_commands" \
+"*::: :->cc" \
+&& ret=0
+
+    case $state in
+    (cc)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-cc-command-$line[1]:"
+        case $line[1] in
+            (generate)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(collect)
+_arguments "${_arguments_options[@]}" : \
+'-o+[Directory to place compile_commands.json (default\: current build directory)]:OUTDIR:_files -/' \
+'--outdir=[Directory to place compile_commands.json (default\: current build directory)]:OUTDIR:_files -/' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__cc__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-cc-help-command-$line[1]:"
+        case $line[1] in
+            (generate)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(collect)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(set-platform)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+':newplatform:($(__bitbq_platform_selector))' \
+&& ret=0
+;;
+(get-logs)
+_arguments "${_arguments_options[@]}" : \
+'-o+[Path to place logfile tar (default\: current build directory)]:OUTDIR:_files -/' \
+'--outdir=[Path to place logfile tar (default\: current build directory)]:OUTDIR:_files -/' \
+'-f+[Compression format for the output tar (default\: zst)]:FORMAT:((zst\:"zstd compression (default; .tar.zst)"
+xz\:"xz compression (.tar.xz)"
+gz\:"gzip compression (.tar.gz)"))' \
+'--format=[Compression format for the output tar (default\: zst)]:FORMAT:((zst\:"zstd compression (default; .tar.zst)"
+xz\:"xz compression (.tar.xz)"
+gz\:"gzip compression (.tar.gz)"))' \
+'(-g --greedy)-m[Minimal mode\: include only the latest log/run file per task; skip stamps, and prune buildstats/cooker/eventlog history to just the newest entries. Drastically smaller and faster. Conflicts with --greedy]' \
+'(-g --greedy)--minimal[Minimal mode\: include only the latest log/run file per task; skip stamps, and prune buildstats/cooker/eventlog history to just the newest entries. Drastically smaller and faster. Conflicts with --greedy]' \
+'-g[Greedy mode\: include everything -- full per-PID log/run history, full eventlog/, parser-crashes/, stamps/, full buildstats/, all cooker logs. This is the historical bitbq get-logs behavior. Conflicts with --minimal]' \
+'--greedy[Greedy mode\: include everything -- full per-PID log/run history, full eventlog/, parser-crashes/, stamps/, full buildstats/, all cooker logs. This is the historical bitbq get-logs behavior. Conflicts with --minimal]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+&& ret=0
+;;
+(triage)
+_arguments "${_arguments_options[@]}" : \
+'-o+[If given, create a reduced logfile tar at this directory (default\: no tarball)]:OUTDIR:_files -/' \
+'--outdir=[If given, create a reduced logfile tar at this directory (default\: no tarball)]:OUTDIR:_files -/' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(realpath)
+_arguments "${_arguments_options[@]}" : \
+'-P[resolve symlinks as encountered (default, also resolves /__virtual/ symlinks to host paths)]' \
+'--resolve[resolve symlinks as encountered (default, also resolves /__virtual/ symlinks to host paths)]' \
+'-s[don'\''t expand symlinks (negates '\''-P'\'')]' \
+'--no-symlinks[don'\''t expand symlinks (negates '\''-P'\'')]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+':path -- Path in /__virtual/ format to convert to a host path:' \
+&& ret=0
+;;
+(self)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_bitbq__self_commands" \
+"*::: :->self" \
+&& ret=0
+
+    case $state in
+    (self)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-self-command-$line[1]:"
+        case $line[1] in
+            (genconfig)
+_arguments "${_arguments_options[@]}" : \
+'-f[Force overwrite existing config file]' \
+'--force[Force overwrite existing config file]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(completions)
+_arguments "${_arguments_options[@]}" : \
+'-o+[Output file path (defaults to stdout)]:OUTPUT:_files' \
+'--output=[Output file path (defaults to stdout)]:OUTPUT:_files' \
+'-i[Install to default completions location for the shell]' \
+'--install[Install to default completions location for the shell]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+':shell:(bash elvish fish powershell zsh)' \
+&& ret=0
+;;
+(query)
+_arguments "${_arguments_options[@]}" : \
+'-j[Output in JSON format]' \
+'--json[Output in JSON format]' \
+'-y[Output in YAML format]' \
+'--yaml[Output in YAML format]' \
+'-0[Output with null terminators instead of newlines]' \
+'--null[Output with null terminators instead of newlines]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_bitbq__self__query_commands" \
+"*::: :->query" \
+&& ret=0
+
+    case $state in
+    (query)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-self-query-command-$line[1]:"
+        case $line[1] in
+            (super-dir)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(last-context)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(last-build-dir)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(last-platform)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(bitbq-dir)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(user-config)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(all-platforms)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(all-platform-appends)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(all-platform-includes)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(platform-machine)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(platform-target)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(all-bitbq-keys)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(present-bitbq-keys)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(all-bitbq-groups)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(unique-bitbq-key-names)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(present-bitbq-groups)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(unique-present-bitbq-key-names)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(live-exec-ids)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__self__query__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-self-query-help-command-$line[1]:"
+        case $line[1] in
+            (super-dir)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(last-context)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(last-build-dir)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(last-platform)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(bitbq-dir)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(user-config)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-platforms)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-platform-appends)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-platform-includes)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(platform-machine)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(platform-target)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-bitbq-keys)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(present-bitbq-keys)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-bitbq-groups)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(unique-bitbq-key-names)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(present-bitbq-groups)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(unique-present-bitbq-key-names)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(live-exec-ids)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(version)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_bitbq__self__version_commands" \
+"*::: :->version" \
+&& ret=0
+
+    case $state in
+    (version)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-self-version-command-$line[1]:"
+        case $line[1] in
+            (full)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(short)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(long)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(commit)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(json)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(yml)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__self__version__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-self-version-help-command-$line[1]:"
+        case $line[1] in
+            (full)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(short)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(long)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(commit)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(json)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(yml)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(use-version)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+':version -- Release tag id, e.g. `v1.23.4`:_default' \
+&& ret=0
+;;
+(use-beta-version)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+':ticket -- Jira ticket id, optionally with `.n` suffix to select a specific build:_default' \
+&& ret=0
+;;
+(use-default)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(list-versions)
+_arguments "${_arguments_options[@]}" : \
+'--limit=[Maximum entries to print. Default 20]:LIMIT:_default' \
+'--json[Output as JSON instead of a human-readable table]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(list-betas)
+_arguments "${_arguments_options[@]}" : \
+'--json[Output as JSON instead of a human-readable table]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+'::ticket -- Optional Jira ticket id. If omitted, lists all tickets:_default' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__self__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-self-help-command-$line[1]:"
+        case $line[1] in
+            (genconfig)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(completions)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(query)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__self__help__query_commands" \
+"*::: :->query" \
+&& ret=0
+
+    case $state in
+    (query)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-self-help-query-command-$line[1]:"
+        case $line[1] in
+            (super-dir)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(last-context)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(last-build-dir)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(last-platform)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(bitbq-dir)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(user-config)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-platforms)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-platform-appends)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-platform-includes)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(platform-machine)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(platform-target)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-bitbq-keys)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(present-bitbq-keys)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-bitbq-groups)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(unique-bitbq-key-names)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(present-bitbq-groups)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(unique-present-bitbq-key-names)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(live-exec-ids)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(version)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__self__help__version_commands" \
+"*::: :->version" \
+&& ret=0
+
+    case $state in
+    (version)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-self-help-version-command-$line[1]:"
+        case $line[1] in
+            (full)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(short)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(long)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(commit)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(json)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(yml)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(use-version)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(use-beta-version)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(use-default)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(list-versions)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(list-betas)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(supports)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::command -- Command and arguments to validate. If only a subcommand name is given, checks if it exists. If full arguments are given, validates the entire command line would parse successfully:_default' \
+&& ret=0
+;;
+(activity)
+_arguments "${_arguments_options[@]}" : \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_bitbq__activity_commands" \
+"*::: :->activity" \
+&& ret=0
+
+    case $state in
+    (activity)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-activity-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" : \
+'-a[Include execs that have already exited]' \
+'--all[Include execs that have already exited]' \
+'--current[Only list execs from the bitbqd serving the current build dir instead of scanning every daemon under \`\$XDG_RUNTIME_DIR/bitbq/build_dirs/\`]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(get)
+_arguments "${_arguments_options[@]}" : \
+'--yaml[Emit YAML instead of JSON]' \
+'--current[Only consult the bitbqd serving the current build dir instead of scanning every daemon under \`\$XDG_RUNTIME_DIR/bitbq/build_dirs/\`]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help]' \
+'--help[Print help]' \
+':exec_id -- exec_id (UUIDv7 string) — see `bitbq activity list`:($(__bitbq_exec_id_selector))' \
+&& ret=0
+;;
+(watch)
+_arguments "${_arguments_options[@]}" : \
+'--from-start[Replay buffered output from the ring buffer before joining the live stream. This is the default\: bitbqd captures a rolling tail of stdout/stderr per exec and replays it on attach so a late observer sees the same output a concurrent watcher would have seen. Use --live-only to skip the backlog and see only output produced after attach]' \
+'--live-only[Skip the ring-buffer backlog; show only output produced after this attach. Overrides --from-start]' \
+'--current[Only consult the bitbqd serving the current build dir instead of scanning every daemon under \`\$XDG_RUNTIME_DIR/bitbq/build_dirs/\`]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+':exec_id -- exec_id (UUIDv7 string) — see `bitbq activity list`:($(__bitbq_exec_id_selector))' \
+&& ret=0
+;;
+(cancel)
+_arguments "${_arguments_options[@]}" : \
+'--signal=[Starting signal for the escalation walk\: \`int\` (SIGINT), \`term\` (SIGTERM), or \`kill\` (SIGKILL). Omit to use the exec kind'\''s default ladder. The walk still escalates to stronger signals if the child does not exit]:SIGNAL:((int\:"SIGINT (2) — request a clean interrupt first"
+term\:"SIGTERM (15) — polite termination"
+kill\:"SIGKILL (9) — force kill immediately"))' \
+'--current[Only consult the bitbqd serving the current build dir instead of scanning every daemon under \`\$XDG_RUNTIME_DIR/bitbq/build_dirs/\`]' \
+'*-v[Increase logging verbosity]' \
+'*--verbose[Increase logging verbosity]' \
+'(-v --verbose)*-q[Decrease logging verbosity]' \
+'(-v --verbose)*--quiet[Decrease logging verbosity]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+':exec_id -- exec_id (UUIDv7 string) — see `bitbq activity list`:($(__bitbq_exec_id_selector))' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__activity__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-activity-help-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(get)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(watch)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(cancel)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-help-command-$line[1]:"
+        case $line[1] in
+            (init)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(view)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__help__view_commands" \
+"*::: :->view" \
+&& ret=0
+
+    case $state in
+    (view)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-help-view-command-$line[1]:"
+        case $line[1] in
+            (worktrees)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(managed-ids)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(platform)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(platform-map)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(snapshot)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(last-ctx)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(config)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(sync)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(build)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(lock)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(for)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(foreach)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(exec)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(cc)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__help__cc_commands" \
+"*::: :->cc" \
+&& ret=0
+
+    case $state in
+    (cc)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-help-cc-command-$line[1]:"
+        case $line[1] in
+            (generate)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(collect)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(set-platform)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(get-logs)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(triage)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(realpath)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(self)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__help__self_commands" \
+"*::: :->self" \
+&& ret=0
+
+    case $state in
+    (self)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-help-self-command-$line[1]:"
+        case $line[1] in
+            (genconfig)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(completions)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(query)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__help__self__query_commands" \
+"*::: :->query" \
+&& ret=0
+
+    case $state in
+    (query)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-help-self-query-command-$line[1]:"
+        case $line[1] in
+            (super-dir)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(last-context)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(last-build-dir)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(last-platform)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(bitbq-dir)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(user-config)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-platforms)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-platform-appends)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-platform-includes)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(platform-machine)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(platform-target)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-bitbq-keys)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(present-bitbq-keys)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(all-bitbq-groups)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(unique-bitbq-key-names)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(present-bitbq-groups)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(unique-present-bitbq-key-names)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(live-exec-ids)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(version)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__help__self__version_commands" \
+"*::: :->version" \
+&& ret=0
+
+    case $state in
+    (version)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-help-self-version-command-$line[1]:"
+        case $line[1] in
+            (full)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(short)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(long)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(commit)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(json)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(yml)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(use-version)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(use-beta-version)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(use-default)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(list-versions)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(list-betas)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(supports)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(activity)
+_arguments "${_arguments_options[@]}" : \
+":: :_bitbq__help__activity_commands" \
+"*::: :->activity" \
+&& ret=0
+
+    case $state in
+    (activity)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:bitbq-help-activity-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(get)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(watch)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(cancel)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+}
+
+(( $+functions[_bitbq_commands] )) ||
+_bitbq_commands() {
+    local commands; commands=(
+'init:Initialize a build directory with configuration files, and starts bitbqd' \
+'view:View various things...' \
+'sync:Synchronize/create worktrees for a platform with the current snapshot' \
+'build:Run a build!' \
+'lock:Output worktree git state to snapshot.yaml (see --help)' \
+'for:Run a command in the directories for a given set of worktrees' \
+'foreach:Run a command in each directory for all current worktrees' \
+'exec:Execute something else in the sandbox' \
+'cc:Generate compile_commands.json' \
+'set-platform:Set platform explicitly and exit, same as other commands'\'' -p arg' \
+'get-logs:Collect logfiles, see --help' \
+'triage:Triage the last bitbake build for errors, see --help' \
+'realpath:Convert a /__virtual/ path to its corresponding host path' \
+'self:Bitbq specific commands' \
+'supports:Query bitbq if it supports a command (and optionally validate its arguments)' \
+'activity:Inspect or control in-container execs that bitbqd is currently shepherding' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq commands' commands "$@"
+}
+(( $+functions[_bitbq__activity_commands] )) ||
+_bitbq__activity_commands() {
+    local commands; commands=(
+'list:List in-container execs across every live bitbqd on the host (use --current to restrict to the daemon for this build dir)' \
+'get:Print the full ExecInfo for one exec as JSON (default) or YAML' \
+'watch:Stream stdout/stderr of an exec; stderr is colorized to distinguish' \
+'cancel:Cancel an exec via a signal-escalation walk on the in-container child' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq activity commands' commands "$@"
+}
+(( $+functions[_bitbq__activity__cancel_commands] )) ||
+_bitbq__activity__cancel_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq activity cancel commands' commands "$@"
+}
+(( $+functions[_bitbq__activity__get_commands] )) ||
+_bitbq__activity__get_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq activity get commands' commands "$@"
+}
+(( $+functions[_bitbq__activity__help_commands] )) ||
+_bitbq__activity__help_commands() {
+    local commands; commands=(
+'list:List in-container execs across every live bitbqd on the host (use --current to restrict to the daemon for this build dir)' \
+'get:Print the full ExecInfo for one exec as JSON (default) or YAML' \
+'watch:Stream stdout/stderr of an exec; stderr is colorized to distinguish' \
+'cancel:Cancel an exec via a signal-escalation walk on the in-container child' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq activity help commands' commands "$@"
+}
+(( $+functions[_bitbq__activity__help__cancel_commands] )) ||
+_bitbq__activity__help__cancel_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq activity help cancel commands' commands "$@"
+}
+(( $+functions[_bitbq__activity__help__get_commands] )) ||
+_bitbq__activity__help__get_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq activity help get commands' commands "$@"
+}
+(( $+functions[_bitbq__activity__help__help_commands] )) ||
+_bitbq__activity__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq activity help help commands' commands "$@"
+}
+(( $+functions[_bitbq__activity__help__list_commands] )) ||
+_bitbq__activity__help__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq activity help list commands' commands "$@"
+}
+(( $+functions[_bitbq__activity__help__watch_commands] )) ||
+_bitbq__activity__help__watch_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq activity help watch commands' commands "$@"
+}
+(( $+functions[_bitbq__activity__list_commands] )) ||
+_bitbq__activity__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq activity list commands' commands "$@"
+}
+(( $+functions[_bitbq__activity__watch_commands] )) ||
+_bitbq__activity__watch_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq activity watch commands' commands "$@"
+}
+(( $+functions[_bitbq__build_commands] )) ||
+_bitbq__build_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq build commands' commands "$@"
+}
+(( $+functions[_bitbq__cc_commands] )) ||
+_bitbq__cc_commands() {
+    local commands; commands=(
+'generate:Step 1\: Instruct bitbake to generate compile_commands.json for all relevant recipes' \
+'collect:Step 2\: Collect and parse the compile_commands.json files' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq cc commands' commands "$@"
+}
+(( $+functions[_bitbq__cc__collect_commands] )) ||
+_bitbq__cc__collect_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq cc collect commands' commands "$@"
+}
+(( $+functions[_bitbq__cc__generate_commands] )) ||
+_bitbq__cc__generate_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq cc generate commands' commands "$@"
+}
+(( $+functions[_bitbq__cc__help_commands] )) ||
+_bitbq__cc__help_commands() {
+    local commands; commands=(
+'generate:Step 1\: Instruct bitbake to generate compile_commands.json for all relevant recipes' \
+'collect:Step 2\: Collect and parse the compile_commands.json files' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq cc help commands' commands "$@"
+}
+(( $+functions[_bitbq__cc__help__collect_commands] )) ||
+_bitbq__cc__help__collect_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq cc help collect commands' commands "$@"
+}
+(( $+functions[_bitbq__cc__help__generate_commands] )) ||
+_bitbq__cc__help__generate_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq cc help generate commands' commands "$@"
+}
+(( $+functions[_bitbq__cc__help__help_commands] )) ||
+_bitbq__cc__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq cc help help commands' commands "$@"
+}
+(( $+functions[_bitbq__exec_commands] )) ||
+_bitbq__exec_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq exec commands' commands "$@"
+}
+(( $+functions[_bitbq__for_commands] )) ||
+_bitbq__for_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq for commands' commands "$@"
+}
+(( $+functions[_bitbq__foreach_commands] )) ||
+_bitbq__foreach_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq foreach commands' commands "$@"
+}
+(( $+functions[_bitbq__get-logs_commands] )) ||
+_bitbq__get-logs_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq get-logs commands' commands "$@"
+}
+(( $+functions[_bitbq__help_commands] )) ||
+_bitbq__help_commands() {
+    local commands; commands=(
+'init:Initialize a build directory with configuration files, and starts bitbqd' \
+'view:View various things...' \
+'sync:Synchronize/create worktrees for a platform with the current snapshot' \
+'build:Run a build!' \
+'lock:Output worktree git state to snapshot.yaml (see --help)' \
+'for:Run a command in the directories for a given set of worktrees' \
+'foreach:Run a command in each directory for all current worktrees' \
+'exec:Execute something else in the sandbox' \
+'cc:Generate compile_commands.json' \
+'set-platform:Set platform explicitly and exit, same as other commands'\'' -p arg' \
+'get-logs:Collect logfiles, see --help' \
+'triage:Triage the last bitbake build for errors, see --help' \
+'realpath:Convert a /__virtual/ path to its corresponding host path' \
+'self:Bitbq specific commands' \
+'supports:Query bitbq if it supports a command (and optionally validate its arguments)' \
+'activity:Inspect or control in-container execs that bitbqd is currently shepherding' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq help commands' commands "$@"
+}
+(( $+functions[_bitbq__help__activity_commands] )) ||
+_bitbq__help__activity_commands() {
+    local commands; commands=(
+'list:List in-container execs across every live bitbqd on the host (use --current to restrict to the daemon for this build dir)' \
+'get:Print the full ExecInfo for one exec as JSON (default) or YAML' \
+'watch:Stream stdout/stderr of an exec; stderr is colorized to distinguish' \
+'cancel:Cancel an exec via a signal-escalation walk on the in-container child' \
+    )
+    _describe -t commands 'bitbq help activity commands' commands "$@"
+}
+(( $+functions[_bitbq__help__activity__cancel_commands] )) ||
+_bitbq__help__activity__cancel_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help activity cancel commands' commands "$@"
+}
+(( $+functions[_bitbq__help__activity__get_commands] )) ||
+_bitbq__help__activity__get_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help activity get commands' commands "$@"
+}
+(( $+functions[_bitbq__help__activity__list_commands] )) ||
+_bitbq__help__activity__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help activity list commands' commands "$@"
+}
+(( $+functions[_bitbq__help__activity__watch_commands] )) ||
+_bitbq__help__activity__watch_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help activity watch commands' commands "$@"
+}
+(( $+functions[_bitbq__help__build_commands] )) ||
+_bitbq__help__build_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help build commands' commands "$@"
+}
+(( $+functions[_bitbq__help__cc_commands] )) ||
+_bitbq__help__cc_commands() {
+    local commands; commands=(
+'generate:Step 1\: Instruct bitbake to generate compile_commands.json for all relevant recipes' \
+'collect:Step 2\: Collect and parse the compile_commands.json files' \
+    )
+    _describe -t commands 'bitbq help cc commands' commands "$@"
+}
+(( $+functions[_bitbq__help__cc__collect_commands] )) ||
+_bitbq__help__cc__collect_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help cc collect commands' commands "$@"
+}
+(( $+functions[_bitbq__help__cc__generate_commands] )) ||
+_bitbq__help__cc__generate_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help cc generate commands' commands "$@"
+}
+(( $+functions[_bitbq__help__exec_commands] )) ||
+_bitbq__help__exec_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help exec commands' commands "$@"
+}
+(( $+functions[_bitbq__help__for_commands] )) ||
+_bitbq__help__for_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help for commands' commands "$@"
+}
+(( $+functions[_bitbq__help__foreach_commands] )) ||
+_bitbq__help__foreach_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help foreach commands' commands "$@"
+}
+(( $+functions[_bitbq__help__get-logs_commands] )) ||
+_bitbq__help__get-logs_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help get-logs commands' commands "$@"
+}
+(( $+functions[_bitbq__help__help_commands] )) ||
+_bitbq__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help help commands' commands "$@"
+}
+(( $+functions[_bitbq__help__init_commands] )) ||
+_bitbq__help__init_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help init commands' commands "$@"
+}
+(( $+functions[_bitbq__help__lock_commands] )) ||
+_bitbq__help__lock_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help lock commands' commands "$@"
+}
+(( $+functions[_bitbq__help__realpath_commands] )) ||
+_bitbq__help__realpath_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help realpath commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self_commands] )) ||
+_bitbq__help__self_commands() {
+    local commands; commands=(
+'genconfig:Generate and install a sample user config file (to ~/.config/bitbq/config.yaml)' \
+'completions:Generate shell completions' \
+'query:bitbq plumbing query commands, see --help' \
+'version:Print the current version of bitbq and exit' \
+'use-version:Pin the super-dir to a specific published bitbq release' \
+'use-beta-version:Pin the super-dir to a specific beta build for a Jira ticket' \
+'use-default:Clear any active version pin from \`.lastctx_super\`' \
+'list-versions:List published bitbq releases' \
+'list-betas:List published bitbq beta builds' \
+    )
+    _describe -t commands 'bitbq help self commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__completions_commands] )) ||
+_bitbq__help__self__completions_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self completions commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__genconfig_commands] )) ||
+_bitbq__help__self__genconfig_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self genconfig commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__list-betas_commands] )) ||
+_bitbq__help__self__list-betas_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self list-betas commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__list-versions_commands] )) ||
+_bitbq__help__self__list-versions_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self list-versions commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query_commands] )) ||
+_bitbq__help__self__query_commands() {
+    local commands; commands=(
+'super-dir:' \
+'last-context:' \
+'last-build-dir:' \
+'last-platform:' \
+'bitbq-dir:' \
+'user-config:' \
+'all-platforms:' \
+'all-platform-appends:' \
+'all-platform-includes:' \
+'platform-machine:' \
+'platform-target:' \
+'all-bitbq-keys:All bitbq keys defined in snapshot.yaml (group/name format)' \
+'present-bitbq-keys:Only bitbq keys whose worktree directory currently exists on disk (sources/group/name)' \
+'all-bitbq-groups:Unique group prefixes from snapshot.yaml' \
+'unique-bitbq-key-names:Bare names that appear in exactly one group (safe shorthand)' \
+'present-bitbq-groups:Unique group prefixes from repos whose worktree directory exists on disk' \
+'unique-present-bitbq-key-names:Bare names that appear in exactly one group among present repos' \
+'live-exec-ids:Every exec_id currently visible across every live bitbqd on the host. Used by shell completion for \`activity {get,watch,cancel}\`' \
+    )
+    _describe -t commands 'bitbq help self query commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__all-bitbq-groups_commands] )) ||
+_bitbq__help__self__query__all-bitbq-groups_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query all-bitbq-groups commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__all-bitbq-keys_commands] )) ||
+_bitbq__help__self__query__all-bitbq-keys_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query all-bitbq-keys commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__all-platform-appends_commands] )) ||
+_bitbq__help__self__query__all-platform-appends_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query all-platform-appends commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__all-platform-includes_commands] )) ||
+_bitbq__help__self__query__all-platform-includes_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query all-platform-includes commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__all-platforms_commands] )) ||
+_bitbq__help__self__query__all-platforms_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query all-platforms commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__bitbq-dir_commands] )) ||
+_bitbq__help__self__query__bitbq-dir_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query bitbq-dir commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__last-build-dir_commands] )) ||
+_bitbq__help__self__query__last-build-dir_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query last-build-dir commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__last-context_commands] )) ||
+_bitbq__help__self__query__last-context_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query last-context commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__last-platform_commands] )) ||
+_bitbq__help__self__query__last-platform_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query last-platform commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__live-exec-ids_commands] )) ||
+_bitbq__help__self__query__live-exec-ids_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query live-exec-ids commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__platform-machine_commands] )) ||
+_bitbq__help__self__query__platform-machine_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query platform-machine commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__platform-target_commands] )) ||
+_bitbq__help__self__query__platform-target_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query platform-target commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__present-bitbq-groups_commands] )) ||
+_bitbq__help__self__query__present-bitbq-groups_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query present-bitbq-groups commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__present-bitbq-keys_commands] )) ||
+_bitbq__help__self__query__present-bitbq-keys_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query present-bitbq-keys commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__super-dir_commands] )) ||
+_bitbq__help__self__query__super-dir_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query super-dir commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__unique-bitbq-key-names_commands] )) ||
+_bitbq__help__self__query__unique-bitbq-key-names_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query unique-bitbq-key-names commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__unique-present-bitbq-key-names_commands] )) ||
+_bitbq__help__self__query__unique-present-bitbq-key-names_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query unique-present-bitbq-key-names commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__query__user-config_commands] )) ||
+_bitbq__help__self__query__user-config_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self query user-config commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__use-beta-version_commands] )) ||
+_bitbq__help__self__use-beta-version_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self use-beta-version commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__use-default_commands] )) ||
+_bitbq__help__self__use-default_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self use-default commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__use-version_commands] )) ||
+_bitbq__help__self__use-version_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self use-version commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__version_commands] )) ||
+_bitbq__help__self__version_commands() {
+    local commands; commands=(
+'full:Full version info, including schema and commit, same as \`bitbq --version\`' \
+'short:Output only the version number' \
+'long:Output only the version and type' \
+'commit:Output only the build commit' \
+'json:Output version info in JSON format' \
+'yml:Output version info in YAML format' \
+    )
+    _describe -t commands 'bitbq help self version commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__version__commit_commands] )) ||
+_bitbq__help__self__version__commit_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self version commit commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__version__full_commands] )) ||
+_bitbq__help__self__version__full_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self version full commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__version__json_commands] )) ||
+_bitbq__help__self__version__json_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self version json commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__version__long_commands] )) ||
+_bitbq__help__self__version__long_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self version long commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__version__short_commands] )) ||
+_bitbq__help__self__version__short_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self version short commands' commands "$@"
+}
+(( $+functions[_bitbq__help__self__version__yml_commands] )) ||
+_bitbq__help__self__version__yml_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help self version yml commands' commands "$@"
+}
+(( $+functions[_bitbq__help__set-platform_commands] )) ||
+_bitbq__help__set-platform_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help set-platform commands' commands "$@"
+}
+(( $+functions[_bitbq__help__supports_commands] )) ||
+_bitbq__help__supports_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help supports commands' commands "$@"
+}
+(( $+functions[_bitbq__help__sync_commands] )) ||
+_bitbq__help__sync_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help sync commands' commands "$@"
+}
+(( $+functions[_bitbq__help__triage_commands] )) ||
+_bitbq__help__triage_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help triage commands' commands "$@"
+}
+(( $+functions[_bitbq__help__view_commands] )) ||
+_bitbq__help__view_commands() {
+    local commands; commands=(
+'worktrees:See status of all root-level worktrees (meta layers and utility repos)' \
+'managed-ids:View bitbqd'\''s "Managed ID" for all worktrees' \
+'platform:Dump parsed platform yaml for a platform' \
+'platform-map:Dump all platform map yaml data before individual platform is parsed' \
+'snapshot:Parse and Dump Snapshot data' \
+'last-ctx:Last Context Data' \
+'config:Config Data' \
+    )
+    _describe -t commands 'bitbq help view commands' commands "$@"
+}
+(( $+functions[_bitbq__help__view__config_commands] )) ||
+_bitbq__help__view__config_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help view config commands' commands "$@"
+}
+(( $+functions[_bitbq__help__view__last-ctx_commands] )) ||
+_bitbq__help__view__last-ctx_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help view last-ctx commands' commands "$@"
+}
+(( $+functions[_bitbq__help__view__managed-ids_commands] )) ||
+_bitbq__help__view__managed-ids_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help view managed-ids commands' commands "$@"
+}
+(( $+functions[_bitbq__help__view__platform_commands] )) ||
+_bitbq__help__view__platform_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help view platform commands' commands "$@"
+}
+(( $+functions[_bitbq__help__view__platform-map_commands] )) ||
+_bitbq__help__view__platform-map_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help view platform-map commands' commands "$@"
+}
+(( $+functions[_bitbq__help__view__snapshot_commands] )) ||
+_bitbq__help__view__snapshot_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help view snapshot commands' commands "$@"
+}
+(( $+functions[_bitbq__help__view__worktrees_commands] )) ||
+_bitbq__help__view__worktrees_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq help view worktrees commands' commands "$@"
+}
+(( $+functions[_bitbq__init_commands] )) ||
+_bitbq__init_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq init commands' commands "$@"
+}
+(( $+functions[_bitbq__lock_commands] )) ||
+_bitbq__lock_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq lock commands' commands "$@"
+}
+(( $+functions[_bitbq__realpath_commands] )) ||
+_bitbq__realpath_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq realpath commands' commands "$@"
+}
+(( $+functions[_bitbq__self_commands] )) ||
+_bitbq__self_commands() {
+    local commands; commands=(
+'genconfig:Generate and install a sample user config file (to ~/.config/bitbq/config.yaml)' \
+'completions:Generate shell completions' \
+'query:bitbq plumbing query commands, see --help' \
+'version:Print the current version of bitbq and exit' \
+'use-version:Pin the super-dir to a specific published bitbq release' \
+'use-beta-version:Pin the super-dir to a specific beta build for a Jira ticket' \
+'use-default:Clear any active version pin from \`.lastctx_super\`' \
+'list-versions:List published bitbq releases' \
+'list-betas:List published bitbq beta builds' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq self commands' commands "$@"
+}
+(( $+functions[_bitbq__self__completions_commands] )) ||
+_bitbq__self__completions_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self completions commands' commands "$@"
+}
+(( $+functions[_bitbq__self__genconfig_commands] )) ||
+_bitbq__self__genconfig_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self genconfig commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help_commands] )) ||
+_bitbq__self__help_commands() {
+    local commands; commands=(
+'genconfig:Generate and install a sample user config file (to ~/.config/bitbq/config.yaml)' \
+'completions:Generate shell completions' \
+'query:bitbq plumbing query commands, see --help' \
+'version:Print the current version of bitbq and exit' \
+'use-version:Pin the super-dir to a specific published bitbq release' \
+'use-beta-version:Pin the super-dir to a specific beta build for a Jira ticket' \
+'use-default:Clear any active version pin from \`.lastctx_super\`' \
+'list-versions:List published bitbq releases' \
+'list-betas:List published bitbq beta builds' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq self help commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__completions_commands] )) ||
+_bitbq__self__help__completions_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help completions commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__genconfig_commands] )) ||
+_bitbq__self__help__genconfig_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help genconfig commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__help_commands] )) ||
+_bitbq__self__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help help commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__list-betas_commands] )) ||
+_bitbq__self__help__list-betas_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help list-betas commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__list-versions_commands] )) ||
+_bitbq__self__help__list-versions_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help list-versions commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query_commands] )) ||
+_bitbq__self__help__query_commands() {
+    local commands; commands=(
+'super-dir:' \
+'last-context:' \
+'last-build-dir:' \
+'last-platform:' \
+'bitbq-dir:' \
+'user-config:' \
+'all-platforms:' \
+'all-platform-appends:' \
+'all-platform-includes:' \
+'platform-machine:' \
+'platform-target:' \
+'all-bitbq-keys:All bitbq keys defined in snapshot.yaml (group/name format)' \
+'present-bitbq-keys:Only bitbq keys whose worktree directory currently exists on disk (sources/group/name)' \
+'all-bitbq-groups:Unique group prefixes from snapshot.yaml' \
+'unique-bitbq-key-names:Bare names that appear in exactly one group (safe shorthand)' \
+'present-bitbq-groups:Unique group prefixes from repos whose worktree directory exists on disk' \
+'unique-present-bitbq-key-names:Bare names that appear in exactly one group among present repos' \
+'live-exec-ids:Every exec_id currently visible across every live bitbqd on the host. Used by shell completion for \`activity {get,watch,cancel}\`' \
+    )
+    _describe -t commands 'bitbq self help query commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__all-bitbq-groups_commands] )) ||
+_bitbq__self__help__query__all-bitbq-groups_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query all-bitbq-groups commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__all-bitbq-keys_commands] )) ||
+_bitbq__self__help__query__all-bitbq-keys_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query all-bitbq-keys commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__all-platform-appends_commands] )) ||
+_bitbq__self__help__query__all-platform-appends_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query all-platform-appends commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__all-platform-includes_commands] )) ||
+_bitbq__self__help__query__all-platform-includes_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query all-platform-includes commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__all-platforms_commands] )) ||
+_bitbq__self__help__query__all-platforms_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query all-platforms commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__bitbq-dir_commands] )) ||
+_bitbq__self__help__query__bitbq-dir_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query bitbq-dir commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__last-build-dir_commands] )) ||
+_bitbq__self__help__query__last-build-dir_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query last-build-dir commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__last-context_commands] )) ||
+_bitbq__self__help__query__last-context_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query last-context commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__last-platform_commands] )) ||
+_bitbq__self__help__query__last-platform_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query last-platform commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__live-exec-ids_commands] )) ||
+_bitbq__self__help__query__live-exec-ids_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query live-exec-ids commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__platform-machine_commands] )) ||
+_bitbq__self__help__query__platform-machine_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query platform-machine commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__platform-target_commands] )) ||
+_bitbq__self__help__query__platform-target_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query platform-target commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__present-bitbq-groups_commands] )) ||
+_bitbq__self__help__query__present-bitbq-groups_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query present-bitbq-groups commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__present-bitbq-keys_commands] )) ||
+_bitbq__self__help__query__present-bitbq-keys_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query present-bitbq-keys commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__super-dir_commands] )) ||
+_bitbq__self__help__query__super-dir_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query super-dir commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__unique-bitbq-key-names_commands] )) ||
+_bitbq__self__help__query__unique-bitbq-key-names_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query unique-bitbq-key-names commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__unique-present-bitbq-key-names_commands] )) ||
+_bitbq__self__help__query__unique-present-bitbq-key-names_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query unique-present-bitbq-key-names commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__query__user-config_commands] )) ||
+_bitbq__self__help__query__user-config_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help query user-config commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__use-beta-version_commands] )) ||
+_bitbq__self__help__use-beta-version_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help use-beta-version commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__use-default_commands] )) ||
+_bitbq__self__help__use-default_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help use-default commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__use-version_commands] )) ||
+_bitbq__self__help__use-version_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help use-version commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__version_commands] )) ||
+_bitbq__self__help__version_commands() {
+    local commands; commands=(
+'full:Full version info, including schema and commit, same as \`bitbq --version\`' \
+'short:Output only the version number' \
+'long:Output only the version and type' \
+'commit:Output only the build commit' \
+'json:Output version info in JSON format' \
+'yml:Output version info in YAML format' \
+    )
+    _describe -t commands 'bitbq self help version commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__version__commit_commands] )) ||
+_bitbq__self__help__version__commit_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help version commit commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__version__full_commands] )) ||
+_bitbq__self__help__version__full_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help version full commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__version__json_commands] )) ||
+_bitbq__self__help__version__json_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help version json commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__version__long_commands] )) ||
+_bitbq__self__help__version__long_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help version long commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__version__short_commands] )) ||
+_bitbq__self__help__version__short_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help version short commands' commands "$@"
+}
+(( $+functions[_bitbq__self__help__version__yml_commands] )) ||
+_bitbq__self__help__version__yml_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self help version yml commands' commands "$@"
+}
+(( $+functions[_bitbq__self__list-betas_commands] )) ||
+_bitbq__self__list-betas_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self list-betas commands' commands "$@"
+}
+(( $+functions[_bitbq__self__list-versions_commands] )) ||
+_bitbq__self__list-versions_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self list-versions commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query_commands] )) ||
+_bitbq__self__query_commands() {
+    local commands; commands=(
+'super-dir:' \
+'last-context:' \
+'last-build-dir:' \
+'last-platform:' \
+'bitbq-dir:' \
+'user-config:' \
+'all-platforms:' \
+'all-platform-appends:' \
+'all-platform-includes:' \
+'platform-machine:' \
+'platform-target:' \
+'all-bitbq-keys:All bitbq keys defined in snapshot.yaml (group/name format)' \
+'present-bitbq-keys:Only bitbq keys whose worktree directory currently exists on disk (sources/group/name)' \
+'all-bitbq-groups:Unique group prefixes from snapshot.yaml' \
+'unique-bitbq-key-names:Bare names that appear in exactly one group (safe shorthand)' \
+'present-bitbq-groups:Unique group prefixes from repos whose worktree directory exists on disk' \
+'unique-present-bitbq-key-names:Bare names that appear in exactly one group among present repos' \
+'live-exec-ids:Every exec_id currently visible across every live bitbqd on the host. Used by shell completion for \`activity {get,watch,cancel}\`' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq self query commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__all-bitbq-groups_commands] )) ||
+_bitbq__self__query__all-bitbq-groups_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query all-bitbq-groups commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__all-bitbq-keys_commands] )) ||
+_bitbq__self__query__all-bitbq-keys_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query all-bitbq-keys commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__all-platform-appends_commands] )) ||
+_bitbq__self__query__all-platform-appends_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query all-platform-appends commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__all-platform-includes_commands] )) ||
+_bitbq__self__query__all-platform-includes_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query all-platform-includes commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__all-platforms_commands] )) ||
+_bitbq__self__query__all-platforms_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query all-platforms commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__bitbq-dir_commands] )) ||
+_bitbq__self__query__bitbq-dir_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query bitbq-dir commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help_commands] )) ||
+_bitbq__self__query__help_commands() {
+    local commands; commands=(
+'super-dir:' \
+'last-context:' \
+'last-build-dir:' \
+'last-platform:' \
+'bitbq-dir:' \
+'user-config:' \
+'all-platforms:' \
+'all-platform-appends:' \
+'all-platform-includes:' \
+'platform-machine:' \
+'platform-target:' \
+'all-bitbq-keys:All bitbq keys defined in snapshot.yaml (group/name format)' \
+'present-bitbq-keys:Only bitbq keys whose worktree directory currently exists on disk (sources/group/name)' \
+'all-bitbq-groups:Unique group prefixes from snapshot.yaml' \
+'unique-bitbq-key-names:Bare names that appear in exactly one group (safe shorthand)' \
+'present-bitbq-groups:Unique group prefixes from repos whose worktree directory exists on disk' \
+'unique-present-bitbq-key-names:Bare names that appear in exactly one group among present repos' \
+'live-exec-ids:Every exec_id currently visible across every live bitbqd on the host. Used by shell completion for \`activity {get,watch,cancel}\`' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq self query help commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__all-bitbq-groups_commands] )) ||
+_bitbq__self__query__help__all-bitbq-groups_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help all-bitbq-groups commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__all-bitbq-keys_commands] )) ||
+_bitbq__self__query__help__all-bitbq-keys_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help all-bitbq-keys commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__all-platform-appends_commands] )) ||
+_bitbq__self__query__help__all-platform-appends_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help all-platform-appends commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__all-platform-includes_commands] )) ||
+_bitbq__self__query__help__all-platform-includes_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help all-platform-includes commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__all-platforms_commands] )) ||
+_bitbq__self__query__help__all-platforms_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help all-platforms commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__bitbq-dir_commands] )) ||
+_bitbq__self__query__help__bitbq-dir_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help bitbq-dir commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__help_commands] )) ||
+_bitbq__self__query__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help help commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__last-build-dir_commands] )) ||
+_bitbq__self__query__help__last-build-dir_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help last-build-dir commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__last-context_commands] )) ||
+_bitbq__self__query__help__last-context_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help last-context commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__last-platform_commands] )) ||
+_bitbq__self__query__help__last-platform_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help last-platform commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__live-exec-ids_commands] )) ||
+_bitbq__self__query__help__live-exec-ids_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help live-exec-ids commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__platform-machine_commands] )) ||
+_bitbq__self__query__help__platform-machine_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help platform-machine commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__platform-target_commands] )) ||
+_bitbq__self__query__help__platform-target_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help platform-target commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__present-bitbq-groups_commands] )) ||
+_bitbq__self__query__help__present-bitbq-groups_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help present-bitbq-groups commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__present-bitbq-keys_commands] )) ||
+_bitbq__self__query__help__present-bitbq-keys_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help present-bitbq-keys commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__super-dir_commands] )) ||
+_bitbq__self__query__help__super-dir_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help super-dir commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__unique-bitbq-key-names_commands] )) ||
+_bitbq__self__query__help__unique-bitbq-key-names_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help unique-bitbq-key-names commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__unique-present-bitbq-key-names_commands] )) ||
+_bitbq__self__query__help__unique-present-bitbq-key-names_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help unique-present-bitbq-key-names commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__help__user-config_commands] )) ||
+_bitbq__self__query__help__user-config_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query help user-config commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__last-build-dir_commands] )) ||
+_bitbq__self__query__last-build-dir_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query last-build-dir commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__last-context_commands] )) ||
+_bitbq__self__query__last-context_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query last-context commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__last-platform_commands] )) ||
+_bitbq__self__query__last-platform_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query last-platform commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__live-exec-ids_commands] )) ||
+_bitbq__self__query__live-exec-ids_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query live-exec-ids commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__platform-machine_commands] )) ||
+_bitbq__self__query__platform-machine_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query platform-machine commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__platform-target_commands] )) ||
+_bitbq__self__query__platform-target_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query platform-target commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__present-bitbq-groups_commands] )) ||
+_bitbq__self__query__present-bitbq-groups_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query present-bitbq-groups commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__present-bitbq-keys_commands] )) ||
+_bitbq__self__query__present-bitbq-keys_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query present-bitbq-keys commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__super-dir_commands] )) ||
+_bitbq__self__query__super-dir_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query super-dir commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__unique-bitbq-key-names_commands] )) ||
+_bitbq__self__query__unique-bitbq-key-names_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query unique-bitbq-key-names commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__unique-present-bitbq-key-names_commands] )) ||
+_bitbq__self__query__unique-present-bitbq-key-names_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query unique-present-bitbq-key-names commands' commands "$@"
+}
+(( $+functions[_bitbq__self__query__user-config_commands] )) ||
+_bitbq__self__query__user-config_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self query user-config commands' commands "$@"
+}
+(( $+functions[_bitbq__self__use-beta-version_commands] )) ||
+_bitbq__self__use-beta-version_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self use-beta-version commands' commands "$@"
+}
+(( $+functions[_bitbq__self__use-default_commands] )) ||
+_bitbq__self__use-default_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self use-default commands' commands "$@"
+}
+(( $+functions[_bitbq__self__use-version_commands] )) ||
+_bitbq__self__use-version_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self use-version commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version_commands] )) ||
+_bitbq__self__version_commands() {
+    local commands; commands=(
+'full:Full version info, including schema and commit, same as \`bitbq --version\`' \
+'short:Output only the version number' \
+'long:Output only the version and type' \
+'commit:Output only the build commit' \
+'json:Output version info in JSON format' \
+'yml:Output version info in YAML format' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq self version commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__commit_commands] )) ||
+_bitbq__self__version__commit_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version commit commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__full_commands] )) ||
+_bitbq__self__version__full_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version full commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__help_commands] )) ||
+_bitbq__self__version__help_commands() {
+    local commands; commands=(
+'full:Full version info, including schema and commit, same as \`bitbq --version\`' \
+'short:Output only the version number' \
+'long:Output only the version and type' \
+'commit:Output only the build commit' \
+'json:Output version info in JSON format' \
+'yml:Output version info in YAML format' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq self version help commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__help__commit_commands] )) ||
+_bitbq__self__version__help__commit_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version help commit commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__help__full_commands] )) ||
+_bitbq__self__version__help__full_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version help full commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__help__help_commands] )) ||
+_bitbq__self__version__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version help help commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__help__json_commands] )) ||
+_bitbq__self__version__help__json_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version help json commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__help__long_commands] )) ||
+_bitbq__self__version__help__long_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version help long commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__help__short_commands] )) ||
+_bitbq__self__version__help__short_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version help short commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__help__yml_commands] )) ||
+_bitbq__self__version__help__yml_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version help yml commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__json_commands] )) ||
+_bitbq__self__version__json_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version json commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__long_commands] )) ||
+_bitbq__self__version__long_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version long commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__short_commands] )) ||
+_bitbq__self__version__short_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version short commands' commands "$@"
+}
+(( $+functions[_bitbq__self__version__yml_commands] )) ||
+_bitbq__self__version__yml_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq self version yml commands' commands "$@"
+}
+(( $+functions[_bitbq__set-platform_commands] )) ||
+_bitbq__set-platform_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq set-platform commands' commands "$@"
+}
+(( $+functions[_bitbq__supports_commands] )) ||
+_bitbq__supports_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq supports commands' commands "$@"
+}
+(( $+functions[_bitbq__sync_commands] )) ||
+_bitbq__sync_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq sync commands' commands "$@"
+}
+(( $+functions[_bitbq__triage_commands] )) ||
+_bitbq__triage_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq triage commands' commands "$@"
+}
+(( $+functions[_bitbq__view_commands] )) ||
+_bitbq__view_commands() {
+    local commands; commands=(
+'worktrees:See status of all root-level worktrees (meta layers and utility repos)' \
+'managed-ids:View bitbqd'\''s "Managed ID" for all worktrees' \
+'platform:Dump parsed platform yaml for a platform' \
+'platform-map:Dump all platform map yaml data before individual platform is parsed' \
+'snapshot:Parse and Dump Snapshot data' \
+'last-ctx:Last Context Data' \
+'config:Config Data' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq view commands' commands "$@"
+}
+(( $+functions[_bitbq__view__config_commands] )) ||
+_bitbq__view__config_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view config commands' commands "$@"
+}
+(( $+functions[_bitbq__view__help_commands] )) ||
+_bitbq__view__help_commands() {
+    local commands; commands=(
+'worktrees:See status of all root-level worktrees (meta layers and utility repos)' \
+'managed-ids:View bitbqd'\''s "Managed ID" for all worktrees' \
+'platform:Dump parsed platform yaml for a platform' \
+'platform-map:Dump all platform map yaml data before individual platform is parsed' \
+'snapshot:Parse and Dump Snapshot data' \
+'last-ctx:Last Context Data' \
+'config:Config Data' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'bitbq view help commands' commands "$@"
+}
+(( $+functions[_bitbq__view__help__config_commands] )) ||
+_bitbq__view__help__config_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view help config commands' commands "$@"
+}
+(( $+functions[_bitbq__view__help__help_commands] )) ||
+_bitbq__view__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view help help commands' commands "$@"
+}
+(( $+functions[_bitbq__view__help__last-ctx_commands] )) ||
+_bitbq__view__help__last-ctx_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view help last-ctx commands' commands "$@"
+}
+(( $+functions[_bitbq__view__help__managed-ids_commands] )) ||
+_bitbq__view__help__managed-ids_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view help managed-ids commands' commands "$@"
+}
+(( $+functions[_bitbq__view__help__platform_commands] )) ||
+_bitbq__view__help__platform_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view help platform commands' commands "$@"
+}
+(( $+functions[_bitbq__view__help__platform-map_commands] )) ||
+_bitbq__view__help__platform-map_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view help platform-map commands' commands "$@"
+}
+(( $+functions[_bitbq__view__help__snapshot_commands] )) ||
+_bitbq__view__help__snapshot_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view help snapshot commands' commands "$@"
+}
+(( $+functions[_bitbq__view__help__worktrees_commands] )) ||
+_bitbq__view__help__worktrees_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view help worktrees commands' commands "$@"
+}
+(( $+functions[_bitbq__view__last-ctx_commands] )) ||
+_bitbq__view__last-ctx_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view last-ctx commands' commands "$@"
+}
+(( $+functions[_bitbq__view__managed-ids_commands] )) ||
+_bitbq__view__managed-ids_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view managed-ids commands' commands "$@"
+}
+(( $+functions[_bitbq__view__platform_commands] )) ||
+_bitbq__view__platform_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view platform commands' commands "$@"
+}
+(( $+functions[_bitbq__view__platform-map_commands] )) ||
+_bitbq__view__platform-map_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view platform-map commands' commands "$@"
+}
+(( $+functions[_bitbq__view__snapshot_commands] )) ||
+_bitbq__view__snapshot_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view snapshot commands' commands "$@"
+}
+(( $+functions[_bitbq__view__worktrees_commands] )) ||
+_bitbq__view__worktrees_commands() {
+    local commands; commands=()
+    _describe -t commands 'bitbq view worktrees commands' commands "$@"
+}
+
+if [ "$funcstack[1]" = "_bitbq" ]; then
+    _bitbq "$@"
+else
+    compdef _bitbq bitbq
+fi
+# Custom hackery to support platform and append completion in zsh
+__bitbq_platform_selector() {
+    local platforms appends
+    local -a platform_list append_list
+
+    if ! command -v bitbq >/dev/null 2>&1; then
+        return 1
+    fi
+
+    # Check if we're completing an append (after colon)
+    if [[ "$words[CURRENT]" == *:* ]]; then
+        # Split the current word at the colon
+        local platform_part="${words[CURRENT]%:*}"
+        local append_part="${words[CURRENT]##*:}"
+
+        # Get all available appends
+        append_list=(${(f)"$(bitbq self query all-platform-appends 2>/dev/null)"})
+
+        # Output completions in platform:append format
+        for append in "${append_list[@]}"; do
+            echo "${platform_part}:${append}"
+        done
+    else
+        # Regular platform completion
+        platform_list=(${(f)"$(bitbq self query all-platforms 2>/dev/null)"})
+
+        for platform in "${platform_list[@]}"; do
+            # Output the platform itself
+            echo "${platform}"
+            # Also output platform with colon to suggest appends are available
+            echo "${platform}:"
+        done
+    fi
+}
+
+__bitbq_append_selector() {
+    local appends
+    local -a append_list
+
+    if ! command -v bitbq >/dev/null 2>&1; then
+        return 1
+    fi
+
+    append_list=(${(f)"$(bitbq self query all-platform-appends 2>/dev/null)"})
+
+    for append in "${append_list[@]}"; do
+        echo "${append}"
+    done
+}
+
+# Completion for bitbq keys (group/name or bare unique name).
+# - No slash in prefix: offer group/ prefixes (no trailing space) + unique bare names
+# - Slash in prefix: offer all full keys (zsh filters by prefix)
+__bitbq_all_keys_selector() {
+    if ! command -v bitbq >/dev/null 2>&1; then
+        return 1
+    fi
+
+    if [[ "$words[CURRENT]" == */* ]]; then
+        local -a key_list
+        key_list=(${(f)"$(bitbq self query all-bitbq-keys 2>/dev/null)"})
+        for key in "${key_list[@]}"; do
+            echo "${key}"
+        done
+    else
+        local -a group_list name_list
+        group_list=(${(f)"$(bitbq self query all-bitbq-groups 2>/dev/null)"})
+        name_list=(${(f)"$(bitbq self query unique-bitbq-key-names 2>/dev/null)"})
+        # Groups get a trailing slash with no space after it
+        compadd -S '/' -q -- "${group_list[@]}" 2>/dev/null
+        # Unique bare names complete normally (with trailing space)
+        compadd -- "${name_list[@]}" 2>/dev/null
+    fi
+}
+
+# Completion for bitbq keys whose worktree directory currently exists on disk.
+# - No slash in prefix: offer present group/ prefixes (no trailing space) + unique present bare names
+# - Slash in prefix: offer all present full keys (zsh filters by prefix)
+__bitbq_present_keys_selector() {
+    if ! command -v bitbq >/dev/null 2>&1; then
+        return 1
+    fi
+
+    if [[ "$words[CURRENT]" == */* ]]; then
+        local -a key_list
+        key_list=(${(f)"$(bitbq self query present-bitbq-keys 2>/dev/null)"})
+        for key in "${key_list[@]}"; do
+            echo "${key}"
+        done
+    else
+        local -a group_list name_list
+        group_list=(${(f)"$(bitbq self query present-bitbq-groups 2>/dev/null)"})
+        name_list=(${(f)"$(bitbq self query unique-present-bitbq-key-names 2>/dev/null)"})
+        # Groups get a trailing slash with no space after it
+        compadd -S '/' -q -- "${group_list[@]}" 2>/dev/null
+        # Unique bare names complete normally (with trailing space)
+        compadd -- "${name_list[@]}" 2>/dev/null
+    fi
+}
+
+# Completion for activity exec_id positionals.
+__bitbq_exec_id_selector() {
+    if ! command -v bitbq >/dev/null 2>&1; then
+        return 1
+    fi
+    local -a ids
+    ids=(${(f)"$(bitbq self query live-exec-ids 2>/dev/null)"})
+    for id in "${ids[@]}"; do
+        echo "${id}"
+    done
+}
